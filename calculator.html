@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="el">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Υπολογιστής Αναλογίας 10:1</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #f8f9fa;
+      padding: 20px;
+      color: #222;
+    }
+    .box {
+      max-width: 400px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h1 { font-size: 20px; margin-bottom: 12px; }
+    label { display:block; margin-top:10px; }
+    input {
+      width:100%; padding:8px; margin-top:4px;
+      border:1px solid #ccc; border-radius:6px;
+    }
+    button {
+      margin-top: 14px; width:100%;
+      padding:10px; background:#2b6ef6;
+      color:#fff; border:0; border-radius:8px;
+      cursor:pointer;
+    }
+    .result {
+      margin-top: 16px; padding:12px;
+      background:#f3f6ff; border-radius:8px;
+      border:1px solid #cdd4f0;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>Υπολογιστής 10:1</h1>
+    <label for="color">Χρώμα (ml)</label>
+    <input type="number" id="color" placeholder="π.χ. 100">
+
+    <label for="catalyst">Καταλύτης (ml)</label>
+    <input type="number" id="catalyst" placeholder="π.χ. 10">
+
+    <button onclick="calculate()">Υπολόγισε</button>
+
+    <div class="result" id="result">Εισάγετε ποσότητα χρώματος ή καταλύτη και πατήστε «Υπολόγισε».</div>
+  </div>
+
+<script>
+function calculate(){
+  const color = parseFloat(document.getElementById("color").value);
+  const catalyst = parseFloat(document.getElementById("catalyst").value);
+  const result = document.getElementById("result");
+
+  if(!isNaN(color) && isNaN(catalyst)){
+    result.innerHTML = `Για ${color} ml χρώμα χρειάζεστε ${(color/10).toFixed(1)} ml καταλύτη.`;
+  }
+  else if(isNaN(color) && !isNaN(catalyst)){
+    result.innerHTML = `Για ${catalyst} ml καταλύτη χρειάζεστε ${(catalyst*10).toFixed(1)} ml χρώμα.`;
+  }
+  else if(!isNaN(color) && !isNaN(catalyst)){
+    const ratio = (color / catalyst).toFixed(1);
+    if(ratio == 10){
+      result.innerHTML = `Η αναλογία ${color} ml χρώμα : ${catalyst} ml καταλύτης είναι σωστή (10:1).`;
+    } else {
+      result.innerHTML = `⚠️ Η αναλογία που δώσατε είναι ${ratio}:1. Για σωστό 10:1 πρέπει:<br>
+      • Καταλύτης = ${(color/10).toFixed(1)} ml<br>
+      • Χρώμα = ${(catalyst*10).toFixed(1)} ml`;
+    }
+  }
+  else {
+    result.innerHTML = "Παρακαλώ εισάγετε μία τιμή.";
+  }
+}
+</script>
+</body>
+</html>
