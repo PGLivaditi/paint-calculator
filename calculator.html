@@ -1,83 +1,135 @@
 <!doctype html>
 <html lang="el">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Υπολογιστής Αναλογίας 10:1</title>
   <style>
-    body {
-      font-family: system-ui, sans-serif;
-      background: #f8f9fa;
-      padding: 20px;
-      color: #222;
-    }
-    .box {
-      max-width: 400px;
-      margin: 0 auto;
-      background: #fff;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    h1 { font-size: 20px; margin-bottom: 12px; }
-    label { display:block; margin-top:10px; }
-    input {
-      width:100%; padding:8px; margin-top:4px;
-      border:1px solid #ccc; border-radius:6px;
-    }
-    button {
-      margin-top: 14px; width:100%;
-      padding:10px; background:#2b6ef6;
-      color:#fff; border:0; border-radius:8px;
-      cursor:pointer;
-    }
-    .result {
-      margin-top: 16px; padding:12px;
-      background:#f3f6ff; border-radius:8px;
-      border:1px solid #cdd4f0;
-    }
+    :root{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;}
+    body{display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#f6f7fb;color:#111}
+    .card{width:100%;max-width:720px;padding:22px;border-radius:12px;background:white;box-shadow:0 8px 30px rgba(18,38,63,0.08)}
+    h1{margin:0 0 8px;font-size:20px}
+    p.lead{margin:0 0 18px;color:#555}
+    .row{display:flex;gap:12px;flex-wrap:wrap}
+    label{font-size:13px;color:#333}
+    input[type=number]{width:140px;padding:8px;border-radius:8px;border:1px solid #e0e6ef}
+    .controls{display:flex;gap:12px;align-items:end;flex-wrap:wrap;margin-bottom:12px}
+    .result{margin-top:12px;padding:12px;border-radius:8px;background:#f3f6ff;border:1px solid #e2e8ff}
+    .small{font-size:13px;color:#444}
+    button{padding:8px 12px;border-radius:8px;border:0;background:#2b6ef6;color:white;cursor:pointer}
+    button.secondary{background:#6b7280}
+    .flex-1{flex:1}
+    footer{margin-top:14px;font-size:13px;color:#666}
+    .hint{font-size:12px;color:#666;margin-top:8px}
+    .danger{color:#b91c1c}
   </style>
 </head>
 <body>
-  <div class="box">
-    <h1>Υπολογιστής 10:1</h1>
-    <label for="color">Χρώμα (ml)</label>
-    <input type="number" id="color" placeholder="π.χ. 100">
+  <main class="card" role="main">
+    <h1>Υπολογιστής αναλογίας 10:1</h1>
+    <p class="lead">Το 10 = ποσότητα χρώματος (ml). Το 1 = καταλύτης (ml). Εισάγετε μία τιμή και το εργαλείο υπολογίζει την αντίστοιχη.</p>
 
-    <label for="catalyst">Καταλύτης (ml)</label>
-    <input type="number" id="catalyst" placeholder="π.χ. 10">
+    <div class="controls">
+      <div>
+        <label for="color">Χρώμα (ml)</label><br>
+        <input id="color" type="number" min="0" step="0.1" placeholder="π.χ. 100" />
+      </div>
 
-    <button onclick="calculate()">Υπολόγισε</button>
+      <div>
+        <label for="catalyst">Καταλύτης (ml)</label><br>
+        <input id="catalyst" type="number" min="0" step="0.1" placeholder="π.χ. 10" />
+      </div>
 
-    <div class="result" id="result">Εισάγετε ποσότητα χρώματος ή καταλύτη και πατήστε «Υπολόγισε».</div>
-  </div>
+      <div>
+        <label for="parts">Σειρές (multiples)</label><br>
+        <input id="parts" type="number" min="0" step="1" value="1" title="Πόσες φορές θέλετε την 10:1 αναλογία" />
+      </div>
 
-<script>
-function calculate(){
-  const color = parseFloat(document.getElementById("color").value);
-  const catalyst = parseFloat(document.getElementById("catalyst").value);
-  const result = document.getElementById("result");
+      <div class="flex-1">
+        <button id="calc">Υπολόγισε</button>
+        <button id="reset" class="secondary">Επαναφορά</button>
+      </div>
+    </div>
 
-  if(!isNaN(color) && isNaN(catalyst)){
-    result.innerHTML = `Για ${color} ml χρώμα χρειάζεστε ${(color/10).toFixed(1)} ml καταλύτη.`;
-  }
-  else if(isNaN(color) && !isNaN(catalyst)){
-    result.innerHTML = `Για ${catalyst} ml καταλύτη χρειάζεστε ${(catalyst*10).toFixed(1)} ml χρώμα.`;
-  }
-  else if(!isNaN(color) && !isNaN(catalyst)){
-    const ratio = (color / catalyst).toFixed(1);
-    if(ratio == 10){
-      result.innerHTML = `Η αναλογία ${color} ml χρώμα : ${catalyst} ml καταλύτης είναι σωστή (10:1).`;
-    } else {
-      result.innerHTML = `⚠️ Η αναλογία που δώσατε είναι ${ratio}:1. Για σωστό 10:1 πρέπει:<br>
-      • Καταλύτης = ${(color/10).toFixed(1)} ml<br>
-      • Χρώμα = ${(catalyst*10).toFixed(1)} ml`;
+    <div class="row">
+      <div class="result" id="result">
+        <div class="small">Αποτέλεσμα θα εμφανιστεί εδώ.</div>
+      </div>
+    </div>
+
+    <div class="hint">Πώς λειτουργεί: Αν εισάγετε μόνο το χρώμα, υπολογίζουμε τον καταλύτη ως χρώμα ÷ 10. Αν εισάγετε μόνο τον καταλύτη, υπολογίζουμε το χρώμα ως καταλύτης × 10. Αν εισάγετε και τα δύο, ελέγχουμε αν ακολουθούν 10:1 — αν όχι, εμφανίζεται προειδοποίηση.</div>
+
+    <footer>Σημείωση: όλοι οι υπολογισμοί σε ml — στρογγυλοποιούνται σε 1 δεκαδικό ψηφίο.</footer>
+  </main>
+
+  <script>
+    const colorInput = document.getElementById('color');
+    const catalystInput = document.getElementById('catalyst');
+    const partsInput = document.getElementById('parts');
+    const calcBtn = document.getElementById('calc');
+    const resetBtn = document.getElementById('reset');
+    const resultBox = document.getElementById('result');
+
+    function round1(x){ return Math.round(x*10)/10; }
+
+    function showResult(html){ resultBox.innerHTML = html; }
+
+    function compute(){
+      const colorVal = parseFloat(colorInput.value);
+      const catalystVal = parseFloat(catalystInput.value);
+      const parts = Math.max(1, Math.floor(parseFloat(partsInput.value) || 1));
+
+      // If both provided
+      if(!isNaN(colorVal) && colorVal>0 && !isNaN(catalystVal) && catalystVal>0){
+        const ratio = colorVal / catalystVal;
+        const expectedRatio = 10;
+        let html = '';
+        html += `<div><strong>Χρώμα:</strong> ${round1(colorVal)} ml — <strong>Καταλύτης:</strong> ${round1(catalystVal)} ml</div>`;
+        html += `<div class="small">Αναλογία: ${round1(ratio)} : 1 (αναμενόμενο 10 : 1)</div>`;
+        if(Math.abs(ratio - expectedRatio) <= 0.05*expectedRatio){
+          html += `<div class="small">✅ Η αναλογία είναι ουσιαστικά 10:1.</div>`;
+        } else {
+          html += `<div class="small danger">⚠️ Η αναλογία ΔΕΝ είναι 10:1. Για να έχετε 10:1, χρησιμοποιήστε:</div>`;
+          const suggestedCatalyst = round1(colorVal / expectedRatio);
+          const suggestedColor = round1(catalystVal * expectedRatio);
+          html += `<div class="small">• Καταλύτης για το δοθέν χρώμα: ${suggestedCatalyst} ml</div>`;
+          html += `<div class="small">• Χρώμα για το δοθέν καταλύτη: ${suggestedColor} ml</div>`;
+        }
+        showResult(html);
+        return;
+      }
+
+      // If only color provided
+      if(!isNaN(colorVal) && colorVal>0){
+        const catalystNeeded = round1((colorVal / 10) * parts);
+        const colorTotal = round1(colorVal * parts);
+        showResult(`<div><strong>Σύνολο μετά από ${parts} φορές:</strong></div><div class="small">Χρώμα: ${colorTotal} ml</div><div class="small">Καταλύτης: ${catalystNeeded} ml</div>`);
+        return;
+      }
+
+      // If only catalyst provided
+      if(!isNaN(catalystVal) && catalystVal>0){
+        const colorNeeded = round1((catalystVal * 10) * parts);
+        const catalystTotal = round1(catalystVal * parts);
+        showResult(`<div><strong>Σύνολο μετά από ${parts} φορές:</strong></div><div class="small">Χρώμα: ${colorNeeded} ml</div><div class="small">Καταλύτης: ${catalystTotal} ml</div>`);
+        return;
+      }
+
+      showResult('<div class="small">Παρακαλώ εισάγετε τιμή στο πεδίο <strong>Χρώμα</strong> ή <strong>Καταλύτης</strong> και πατήστε «Υπολόγισε».</div>');
     }
-  }
-  else {
-    result.innerHTML = "Παρακαλώ εισάγετε μία τιμή.";
-  }
-}
-</script>
+
+    calcBtn.addEventListener('click', compute);
+
+    resetBtn.addEventListener('click', ()=>{
+      colorInput.value = '';
+      catalystInput.value = '';
+      partsInput.value = '1';
+      showResult('<div class="small">Αποτέλεσμα θα εμφανιστεί εδώ.</div>');
+    });
+
+    // Allow pressing Enter in any input to calculate
+    [colorInput, catalystInput, partsInput].forEach(el=>el.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') compute(); }));
+
+  </script>
 </body>
 </html>
